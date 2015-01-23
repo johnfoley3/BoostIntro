@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Introduction to Boost</title>
+
+    <link href="index.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<h1>Can we write programs?</h1><small>Of course we can!</small>
+<p>It was a big tricky, but we eventually figured out how to compile with the library
+on Sand. Here is our less than astounding program that uses threads:</p>
+<pre>
+    #include &lt;boost/thread.hpp&gt;
+    #include &lt;iostream&gt;
+
+    void wait(int seconds) {
+
+        boost::this_thread::sleep(boost::posix_time::seconds(seconds));
+    }
+
+    void thread() {
+
+        for(int i = 0; i < 5; ++i) {
+
+            wait(1);
+            std::cout << i << std::endl;
+            }
+        }
+
+    int main() {
+
+        boost::thread t(thread);
+        t.join();
+    }
+</pre>
+<p>Then we compile with this command: </p>
+<pre>g++ -I /usr/include test.cc -o test -lboost_thread -lboost_system</pre>
+<p>This is the magic command that helps us to compile. I'll it step by step.</p>
+<ul>
+    <li>
+        The -I indicates where the header files for the program are located. Binder made it a seek and find
+    by hiding them in <pre>/usr/include/</pre> rather than the typical <pre>/usr/local/include</pre>
+    </li>
+    <li>
+        The next three arguments are pretty standard compiler commands. Take that source file, output the executable
+        with the given name.
+    </li>
+    <li>
+        The next two arguments: <pre>lboost_thread</pre> and <pre>-lboost_system</pre> tell the linker that we want
+        it to stitch in the <span class="italic">built</span> library files. Half of the boost library are simple
+        functions that can be inserted inline, but the other half are architecture specific, so they must be built.
+    </li>
+    <div class="info-box">
+        The second link command was very tricky. We kept getting an error that something was missing, and so
+        StackOverflow came to the rescue and told us what missing library files we should link.
+        <pre>error adding symbols: DSO missing from command line</pre>
+    </div>
+</ul>
+
+</body>
+</html>

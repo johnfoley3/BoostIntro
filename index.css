@@ -1,0 +1,12 @@
+html {
+    background-color: whitesmoke;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.info-box {
+    background-color: powderblue;
+    color: darkolivegreen;
+}
